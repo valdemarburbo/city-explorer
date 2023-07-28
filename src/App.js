@@ -15,9 +15,10 @@ function App() {
   async function getLocation(event) {
     // console.log("location found");
     try {
+      
       event.preventDefault();
       event.target.input.value = "";
-      const API = `https://eu1.locationiq.com/v1/search?key=${process.env.API_KEY}&q=${searchQuery}&format=json`;
+      const API = `https://eu1.locationiq.com/v1/search?key=${process.env.REACT_APP_API_KEY}&q=${searchQuery}&format=json`;
       console.log(API);
       const res = await axios.get(API);
       // console.log(res.data[0]);
@@ -25,23 +26,32 @@ function App() {
       handleMap(res.data[0]);
     } catch (error) {
       console.log(error);
+      alert(error)
     }
   }
 
   function handleMap(data) {
     // console.log(data);
-    const API = `https://maps.locationiq.com/v3/staticmap?key=${process.env.API_KEY}&center=${data.lat},${data.lon}&zoom=9`;
+    const API = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_API_KEY}&center=${data.lat},${data.lon}&zoom=9`;
     setMap(API);
   }
 
   return (
     <div className="App">
+      <h1>City Explorer</h1>
       <form onSubmit={getLocation}>
-        <input type="text" placeholder="search for a city" onChange={handleSearch} name="input" />
+        <input type="text" placeholder="Search for a city" onChange={handleSearch} name="input" />
         <button type="submit">Explore!</button>
       </form>
+      <p className="para">Location</p>
       <p>{location.display_name}</p>
+      <p className="para">Latitude</p>
+      <p>{location.lat}</p>
+      <p className="para">Longitude</p>
+      <p>{location.lon}</p>
+      <p className="para">Map</p>
       {map && <img src={map} alt="map" />}
+      
     </div>
   );
 }
